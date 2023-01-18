@@ -1,0 +1,47 @@
+<h1 id="tableLabel">Calculate Penalty</h1>
+
+<p>Please fill the form below and click on 'Calculate' button.</p>
+
+<p *ngIf="!countrySettings"><em>Loading...</em></p>
+
+<div class="my-2">
+  <div *ngIf="apiResult?.penalty !== null" class="alert alert-danger col-lg-4">
+    <p>
+      <b>Per day penalty:</b> {{selectedCountrySettings?.penaltyAmount | currency: ''+selectedCountrySettings?.currencyCode+'': 'symbol' }}
+    </p>
+    <p>
+      <b>Calculated penalty:</b> {{apiResult?.penalty | currency: ''+selectedCountrySettings?.currencyCode+'': 'symbol' }}
+    </p>
+    <p>
+      <b>Calculated Business Days:</b>
+    </p>
+    <ul>
+      <li *ngFor="let day of apiResult?.days">{{day | date}}</li>
+    </ul>
+  </div>
+  <p *ngIf="message != ''" class="alert col-lg-12" [class.alert-success]="!isError" [class.alert-danger]="isError">
+    <em>{{message}}</em>
+  </p>
+  <form #form="ngForm" (ngSubmit)="calculatePenalty()" ngNativeValidate>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="form-group mb-2">
+          <label for="checkoutDate">Book Checkout Date</label>
+          <input type="date" [(ngModel)]="checkoutDate" required class="form-control" name="checkoutDate" id="checkoutDate" />
+        </div>
+        <div class="form-group mb-2">
+          <label for="returnDate">Book Return Date</label>
+          <input type="date" [(ngModel)]="returnDate" required class="form-control" name="returnDate" id="returnDate" />
+        </div>
+        <div class="form-group mb-2">
+          <label for="exampleInputPassword1">Select Country</label>
+          <select class="form-select" aria-label="Default select example" [(ngModel)]="selectedCountry" name="selectedCountry">
+            <option [value]="''">--Select--</option>
+            <option *ngFor="let cSetting of countrySettings" [value]="cSetting.id">{{cSetting.countryName}}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">{{btnLabel}}</button>
+      </div>
+    </div>
+  </form>
+</div>
